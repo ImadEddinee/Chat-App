@@ -19,156 +19,116 @@ class Chatbox extends Component
     public $paginateVar = 10;
     public $height;
 
-    // protected $listeners = [ 'loadConversation', 'pushMessage', 'loadmore', 'updateHeight', "echo-private:chat. {$auth_id},MessageSent"=>'broadcastedMessageReceived',];
-
-
     public function  getListeners()
     {
-
         $auth_id = auth()->user()->id;
         return [
             "echo-private:chat.{$auth_id},MessageSent" => 'broadcastedMessageReceived',
             "echo-private:chat.{$auth_id},MessageRead" => 'broadcastedMessageRead',
-            'loadConversation', 'pushMessage', 'loadmore', 'updateHeight','broadcastMessageRead','resetComponent'
+            'loadConversation', 'pushMessage', 'loadmore',
+            'updateHeight','broadcastMessageRead','resetComponent'
         ];
     }
 
-
-
     public function resetComponent()
-  {
- 
-$this->selectedConversation= null;
-$this->receiverInstance= null;
- 
-      # code...
-  }
+      {
+          // Clear conversation details when it is closed
+        $this->selectedConversation= null;
+        $this->receiverInstance= null;
+      }
 
     public function broadcastedMessageRead($event)
     {
-        //dd($event);
-
+        // Check if the user is selecting a conversation
         if($this->selectedConversation){
-
-
-
+            //Check if current selected conversation is the same as
+            // the conversation of the broadcasted message
             if((int) $this->selectedConversation->id === (int) $event['conversation_id']){
-
+                // if true  mark message as read
                 $this->dispatchBrowserEvent('markMessageAsRead');
             }
-
         }
-
-        # code...
     }
-    /*---------------------------------------------------------------------------------------*/
-    /*-----------------------------Broadcasted Event fucntion-------------------------------------------*/
-    /*----------------------------------------------------------------------------*/
 
     function broadcastedMessageReceived($event)
     {
-        ///here 
+        // Update the conversation details with the last data
       $this->emitTo('chat.chat-list','refresh');
-        # code...
-        
-        $broadcastedMessage = Message::find($event['message']);
+      $broadcastedMessage = Message::find($event['message']);
 
-
-        #check if any selected conversation is set 
+        // Check if the user is selecting a conversation
         if ($this->selectedConversation) {
-            #check if Auth/current selected conversation is same as broadcasted selecetedConversationgfg
-            if ((int) $this->selectedConversation->id  === (int)$event['conversation_id']) {
-                # if true  mark message as read
+            //Check if current selected conversation is the same as
+            // the conversation of the broadcasted message
+          if ((int) $this->selectedConversation->id  === (int)$event['conversation_id']) {
+              // if true show the new message
                 $broadcastedMessage->read = 1;
                 $broadcastedMessage->save();
                 $this->pushMessage($broadcastedMessage->id);
-                // dd($event);
-
+              // Mark message as read for the sender
                 $this->emitSelf('broadcastMessageRead');
             }
         }
     }
 
-
     public function broadcastMessageRead( )
     {
         broadcast(new MessageRead($this->selectedConversation->id, $this->receiverInstance->id));
-        # code...
     }
 
-    /*--------------------------------------------------*/
-    /*------------------push message to chat--------------*/
-    /*------------------------------------------------ */
     public function pushMessage($messageId)
     {
         $newMessage = Message::find($messageId);
         $this->messages->push($newMessage);
+        // Scroll to the last message
         $this->dispatchBrowserEvent('rowChatToBottom');
-        # code...
     }
 
-
-
-    /*--------------------------------------------------*/
-    /*------------------load More --------------------*/
-    /*------------------------------------------------ */
     function loadmore()
     {
-
-        // dd('top reached ');
+        // Load 10 more messages
         $this->paginateVar = $this->paginateVar + 10;
-        $this->messages_count = Message::where('conversation_id', $this->selectedConversation->id)->count();
+        $this->messages_count = Message::where('conversation_id',
+            $this->selectedConversation->id)->count();
 
         $this->messages = Message::where('conversation_id',  $this->selectedConversation->id)
             ->skip($this->messages_count -  $this->paginateVar)
             ->take($this->paginateVar)->get();
 
         $height = $this->height;
+        // Send the old height to know where the scroll stopped before update
         $this->dispatchBrowserEvent('updatedHeight', ($height));
-        # code...
     }
 
-
-    /*---------------------------------------------------------------------*/
-    /*------------------Update height of messageBody-----------------------*/
-    /*---------------------------------------------------------------------*/
     function updateHeight($height)
     {
-
         // dd($height);
         $this->height = $height;
-
-        # code...
     }
 
-
-
-    /*---------------------------------------------------------------------*/
-    /*------------------load conersation----------------------------------*/
-    /*---------------------------------------------------------------------*/
     public function loadConversation(Conversation $conversation, User $receiver)
     {
-
-
-        //  dd($conversation,$receiver);
+        // load conversation messages
         $this->selectedConversation =  $conversation;
         $this->receiverInstance =  $receiver;
 
-
-        $this->messages_count = Message::where('conversation_id', $this->selectedConversation->id)->count();
+        $this->messages_count = Message::where('conversation_id',
+            $this->selectedConversation->id)->count();
 
         $this->messages = Message::where('conversation_id',  $this->selectedConversation->id)
             ->skip($this->messages_count -  $this->paginateVar)
             ->take($this->paginateVar)->get();
 
+        // hide the chatList on phone size
         $this->dispatchBrowserEvent('chatSelected');
 
+        // mark messages as read
         Message::where('conversation_id',$this->selectedConversation->id)
          ->where('receiver_id',auth()->user()->id)->update(['read'=> 1]);
-
+        // show the messages as read in the sender screen
         $this->emitSelf('broadcastMessageRead');
-        # code...
     }
+
     public function render()
     {
         return view('livewire.chat.chatbox');

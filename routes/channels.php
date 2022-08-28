@@ -19,8 +19,6 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
 });
 
 Broadcast::channel('chat.{receiver}',function(User $user, $receiver){
-
-    #check if user is same as receiver
-
-return (int) $user->id === (int) $receiver;
+    //check if user is same as receiver
+    return (int) $user->id === (int) $receiver;
 });

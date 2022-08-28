@@ -19,10 +19,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-//livewire routes
-
 Route::get('/users',CreateChat::class)->name('users');
-Route::get('/chat{key?}',Main::class)->name('chat');
+Route::get('/chat',Main::class)->name('chat');
 
 
 Route::get('/dashboard', function () {
