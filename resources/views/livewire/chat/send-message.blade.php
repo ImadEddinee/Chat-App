@@ -1,10 +1,10 @@
 <div>
     @if ($selectedConversation)
         <form wire:submit.prevent='sendMessage' action="">
-            <div class="chatbox_footer">
+            <div class="chatbox_footer main-con">
             <div class="custom_form_group">
                 <input wire:model='body' type="text" id="sendMessage" class="control" placeholder="Write message">
-            <button type="submit" class="submit">Send</button>
+            <button type="submit" class=" submit">Send</button>
             </div>
             </div>
         </form>

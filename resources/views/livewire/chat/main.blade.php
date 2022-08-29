@@ -1,9 +1,9 @@
-<div>
-    <div class="chat_container">
-        <div class="chat_list_container">
+<div >
+    <div class="chat_container main-con" >
+        <div class="chat_list_container main-con" >
             @livewire('chat.chat-list')
         </div>
-        <div class="chat_box_container">
+        <div class="chat_box_container main-con">
             @livewire('chat.chatbox')
             @livewire('chat.send-message')
         </div>

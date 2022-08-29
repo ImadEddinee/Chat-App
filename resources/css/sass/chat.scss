@@ -39,6 +39,15 @@ img {
 body {
   background-color: rgba(240, 240, 240, 0.116) !important;
 }
+.main-sc{
+    background-color: #3A3C42 !important;
+}
+.main-con{
+    background-color: #292B30  !important;
+}
+.bg-re{
+    background-color: #5A7159  !important;
+}
 .chat_container {
   position: fixed;
   width: 100%;
@@ -272,7 +281,7 @@ body {
     .msg_body {
       border-radius: 15px;
       display: block;
-      max-width: 80%; 
+      max-width: 80%;
       margin-top: 11px;
       font-size: 16.6px;
       padding: 4px 12px;
@@ -340,7 +349,7 @@ body {
         font-size: 18px;
         font-weight: bold;
         padding: 4px 5px;
-        color: $base_color;
+        color: #5A7159;
         width: 10%;
       }
     }

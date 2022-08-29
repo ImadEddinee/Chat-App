@@ -7,13 +7,13 @@
             <div class="img_container">
                 <img src="https://ui-avatars.com/api/?name={{ $receiverInstance->name }}" alt="">
             </div>
-            <div class="name">
+            <div class="name fw-light fs-5 ms-3 text-capitalize text-white">
                 {{ $receiverInstance->name }}
             </div>
         </div>
         <div class="chatbox_body">
             @foreach ($messages as $message)
-                <div class="msg_body  {{ auth()->id() == $message->sender_id ? 'msg_body_me' : 'msg_body_receiver' }}"
+                <div class="msg_body text-white  {{ auth()->id() == $message->sender_id ? 'msg_body_me main-sc' : 'msg_body_receiver bg-re' }}"
                     style="width:80%;max-width:80%;max-width:max-content">
                     {{ $message->body }}
                     <div class="msg_body_footer">
@@ -59,8 +59,8 @@
             });
         </script>
     @else
-        <div class="fs-4 text-center text-primary mt-5">
-            no conversasion selected
+        <div class="fs-4 text-center text-success  mt-5">
+            No conversation selected
         </div>
     @endif
     <script>

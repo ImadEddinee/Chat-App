@@ -1,16 +1,16 @@
-<div class="container-fluid  w-75 mx-auto mt-3">
+<div class="container-fluid  w-75 mx-auto mt-8">
     <form wire:submit.prevent='searchUser' action="">
         <div class="form-floating mb-3">
-            <input type="text"  wire:model='name' class="form-control" id="floatingInput" placeholder="name@example.com">
-            <label for="floatingInput">
+            <input type="text"  wire:model='name' class=" bg-dark text-white form-control" id="floatingInput" placeholder="name@example.com">
+            <label for="floatingInput" class="text-white">
                 <i class="bi bi-search"></i> Search for users...
             </label>
             <button type="submit"></button>
         </div>
     </form>
-    <ul class="list-group" style="height: 1000px">
+    <ul class="list-group " >
         @foreach ($users as $user)
-            <li class="list-group-item list-group-item-action"
+            <li class="list-group-item bg-dark text-white mb-1 list-group-item-action"
                 wire:click='checkconversation({{$user->id}})'>
                 {{$user->name}}
             </li>
