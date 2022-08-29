@@ -30,12 +30,6 @@ class Chatbox extends Component
         ];
     }
 
-    public function resetComponent()
-      {
-          // Clear conversation details when it is closed
-        $this->selectedConversation= null;
-        $this->receiverInstance= null;
-      }
 
     public function broadcastedMessageRead($event)
     {
@@ -98,6 +92,13 @@ class Chatbox extends Component
         $height = $this->height;
         // Send the old height to know where the scroll stopped before update
         $this->dispatchBrowserEvent('updatedHeight', ($height));
+    }
+
+    public function resetComponent()
+    {
+        // Clear conversation details when it is closed
+        $this->selectedConversation= null;
+        $this->receiverInstance= null;
     }
 
     function updateHeight($height)

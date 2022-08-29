@@ -19,12 +19,6 @@ class ChatList extends Component
                 'resetComponent'];
 
 
-    public function resetComponent()
-    {
-        // Clear conversation details when it is closed
-        $this->selectedConversation= null;
-        $this->receiverInstance= null;
-    }
 
      public function chatUserSelected(Conversation $conversation,$receiverId)
      {
@@ -55,6 +49,14 @@ class ChatList extends Component
             return $this->receiverInstance->$request;
         }
     }
+
+    public function resetComponent()
+    {
+        // Clear conversation details when it is closed
+        $this->selectedConversation= null;
+        $this->receiverInstance= null;
+    }
+
     public function mount()
     {
         $this->auth_id = auth()->id();

@@ -12,7 +12,7 @@ use Livewire\Component;
 class CreateChat extends Component
 {
     public $users = [];
-    public $message= 'hello how are you ';
+    public $message= 'hello how are you';
     public $name;
 
     public function searchUser(){
