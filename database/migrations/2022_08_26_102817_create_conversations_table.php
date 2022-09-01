@@ -19,7 +19,7 @@ return new class extends Migration
             $table->unsignedBigInteger('receiver_id');
             $table->foreign('sender_id')->references('id')->on('users');
             $table->foreign('receiver_id')->references('id')->on('users');
-            $table->timestamp('last_time_message');
+            $table->timestamp('last_time_message')->nullable();
             $table->timestamps();
         });
     }

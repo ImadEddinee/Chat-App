@@ -12,42 +12,56 @@ use Livewire\Component;
 class CreateChat extends Component
 {
     public $users = [];
-    public $message= 'hello how are you';
+    public $result = [];
     public $name;
+    public $conversationAddedMessage = false;
 
     public function searchUser(){
+        $this->users = [];
+        $this->conversationAddedMessage = false;
         if ($this->name == ""){
             // clear search result if input field empty
             $this->users = [];
         }else{
             $search = $this->name . "%";
-            $this->users = User::where('name', 'LIKE', $search)
+            $this->result = User::where('name', 'LIKE', $search)
                 ->where('id', '!=', auth()->user()->id)->get();
+            foreach ($this->result as $user){
+                if ($this->checkIfConversationExists($user->id)){
+                    // If the two users don't already have a conversation
+                    // add to the search result
+                     $this->users[] = $user;
+                }
+            }
         }
+
     }
 
-    public function checkconversation($receiverId)
-    {
+    private function checkIfConversationExists($receiverId){
         // check if the two users doesn't already have a conversation
         // with each other
         $checkedConversation = Conversation::where('receiver_id', auth()->user()->id)
             ->where('sender_id', $receiverId)->orWhere('receiver_id', $receiverId)
             ->where('sender_id', auth()->user()->id)->get();
-
-        if (count($checkedConversation) == 0) {
-            // If not create a new conversation
-            $current_date_time = Carbon::now()->toDateTimeString();
-            $createdConversation= Conversation::create(['receiver_id'=>$receiverId,
-                'sender_id'=>auth()->user()->id,
-                'last_time_message'=>$current_date_time]);
-
-            $createdMessage= Message::create(['conversation_id'=>$createdConversation->id,
-                'sender_id'=>auth()->user()->id,'receiver_id'=>$receiverId,
-                'body'=>$this->message]);
-
-            $createdConversation->last_time_message= $createdMessage->created_at;
-            $createdConversation->save();
+        if (count($checkedConversation) == 0){
+            return true;
+        }else{
+            return false;
         }
+    }
+
+    public function createConversation($receiverId)
+    {
+            // Create a new conversation
+        $createdConversation= Conversation::create(['receiver_id'=>$receiverId,
+                'sender_id'=>auth()->user()->id]);
+
+        $createdConversation->save();
+        // Clear search result
+        $this->users = [];
+        $this->conversationAddedMessage = true;
+        // Clear search input
+        $this->name = "";
     }
     public function render()
     {

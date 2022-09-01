@@ -5,12 +5,13 @@ namespace App\Http\Livewire\Chat;
 use App\Models\Conversation;
 use App\Models\User;
 use Livewire\Component;
+use function PHPUnit\Framework\at;
 
 class ChatList extends Component
 {
 
     public $auth_id;
-    public $conversations;
+    public $conversations ;
     public $receiverInstance;
     public $name;
     public $selectedConversation;
@@ -18,6 +19,24 @@ class ChatList extends Component
     protected $listeners= ['chatUserSelected','refresh'=>'$refresh',
                 'resetComponent'];
 
+    public function searchConversation(){
+        if ($this->name != ''){
+            $this->auth_id = auth()->id();
+            // Get the list of user's conversations
+            $tconversations = Conversation::where('sender_id', $this->auth_id)
+                ->where('last_time_message', '=', null)->get();
+            foreach ($tconversations as $cn){
+                // Get username from the conversation
+                $userName = $this->getChatUserInstance($cn, 'name');
+                if (strpos($userName, $this->name) !== false){
+                    // If username contains the input value add to search result
+                    $this->conversations->prepend($cn);
+                }
+            }
+        }else{
+            $this->mount();
+        }
+    }
 
 
      public function chatUserSelected(Conversation $conversation,$receiverId)
@@ -62,7 +81,9 @@ class ChatList extends Component
         $this->auth_id = auth()->id();
         // Get the list of user's conversations
         $this->conversations = Conversation::where('sender_id', $this->auth_id)
+            ->where('last_time_message', '!=', null)
             ->orWhere('receiver_id', $this->auth_id)
+            ->where('last_time_message', '!=', null)
             ->orderBy('last_time_message', 'DESC')->get();
     }
 

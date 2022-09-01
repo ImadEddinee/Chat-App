@@ -1,9 +1,6 @@
 //imports
 @import "breakpoints";
 
-
-
-//variables
 $header_height: 60px;
 $footer_height: 60px;
 $base_color: #0484f3;
@@ -29,8 +26,6 @@ $base_color: #0484f3;
     color: rgb(204, 204, 204);
   }
 }
-//chat container
-/*---------------------------*/
 
 img {
   object-fit: cover;
@@ -78,13 +73,6 @@ body {
     margin-top: 15px;
   }
 
-  // @media  only screen  and ( min-width:1024px){
-  //   border: 3px solid red;
-  // }
-}
-
-//chatlist
-/*---------------------------*/
 .chat_list_container {
   border-right: 0;
 
@@ -199,9 +187,9 @@ body {
     }
   }
 }
-
-//chatbox
-/*---------------------------*/
+    .form-s{
+        margin-bottom: -25px;
+    }
 .chat_box_container {
   position: relative;
   display: block;
@@ -290,7 +278,7 @@ body {
         width: 100%;
         display: flex;
         justify-content: end;
-        align-items: right;
+        align-items: end;
         font-weight: normal;
         font-family: "Roboto";
 
@@ -334,14 +322,14 @@ body {
         width: 90%;
         border: 0;
         outline: none;
-        box-shadow: 0;
+        box-shadow: navajowhite;
         background-color: rgba(226, 226, 226, 0.87);
         border-radius: 11px;
 
         &:focus {
           box-shadow: none;
           outline: none;
-          border-style: 0;
+          border-style: none;
         }
       }
 
@@ -354,4 +342,5 @@ body {
       }
     }
   }
-}
+}}
+
